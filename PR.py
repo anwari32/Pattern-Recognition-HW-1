@@ -1,5 +1,3 @@
-import math
-
 # Buka file csv dan baca semua baris.
 # Return array baris dari csv.
 def readFile(filename):
@@ -40,6 +38,21 @@ def search_lightness(lightness):
                 i += 1
 
     return result
+
+# Ambil range dari file csv untuk pengujian.
+def get_range(filename):
+    lines = readFile(filename)
+    lines = lines[1:]
+    ranges = []
+    for line in lines:
+        bounds = line.split(',')[0].split('-')
+        lower_bound = float(bounds[0])
+        upper_bound = float(bounds[1])
+        ranges.append(lower_bound)
+        ranges.append(upper_bound)
+    
+    return ranges
+        
 
 # Count Kelas
 def count_fish():
@@ -129,6 +142,7 @@ def compute_risk(desired_cls, counter_cls, lightness):
     return (cost_of_correct_classfication + cost_of_false_classification)
 
 # Memilih action berdasarkan risk.
+# Action yang diambil adalah action dengan risk paling kecil.
 # Return 1 jika 'decide salmon', return 0 jika 'decide seabass'
 def decide_action_based_on_risk(lightness):
     risk_choosing_salmon = compute_risk("salmon", "seabass", lightness)
@@ -141,7 +155,7 @@ def decide_action_based_on_risk(lightness):
     else:
         return 0
 
-
+# Klasifikasi dan penentuan action.
 def classify_and_take_action(lightness):
     p_salmon_given_lightness = P_Salmon_given(lightness)
     p_seabass_given_lightness = P_Seabass_given(lightness)
@@ -160,8 +174,9 @@ def classify_and_take_action(lightness):
 
 # Main
 def main():
-    data_tes = [0.4, 1.2, 1.7, 2.1, 4.0, 4.6, 5.7, 6, 8.2, 9.1, 10]
+    # data_tes = [0.4, 1.2, 1.7, 2.1, 4.0, 4.6, 5.7, 6, 8.2, 9.1, 10]
     # data_tes = [4.0, 4.6, 5.7, 6]
+    data_tes = get_range("data.csv")
     counts = count_fish()
     print('-----------------------')
     print('fish count {}'.format(counts['total']))
